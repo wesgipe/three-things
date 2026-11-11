@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Three Things</title>
+<style>
+/* Layout: one phone-width column, flat squared panels on white, navy header band */
+:root{
+  --navy:#003A5D; --blue:#00609C; --red:#CE0E2D; --teal:#0E8A7D;
+  --tint-blue:#EEF3F7; --tint-teal:#E9F4F2; --tint:#F2F5F7;
+  --ink:#2A333A; --ink-2:#5B6B76; --label:#8A97A0; --rule:#DFE4E8;
+  --bg:#FFFFFF; --white:#FFFFFF;
+  --display:Futura,"Futura PT","Avenir Next","Century Gothic","Trebuchet MS",sans-serif;
+  --body:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  color-scheme:light;
+}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:var(--body);font-size:16px;line-height:1.45;-webkit-text-size-adjust:100%}
+*{box-sizing:border-box}
+.wrap{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.band{background:var(--navy);color:var(--white)}
+header.band .wrap{padding-block:22px 26px;display:flex;flex-direction:column;gap:14px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.18)}
+.mark{width:20px;height:21px;flex:none}
+.eyebrow-h{font-family:var(--display);font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:#A9C1D3}
+h1{font-family:var(--display);font-weight:500;font-size:32px;line-height:1.1;margin:0;text-wrap:balance}
+header p{margin:0;color:#D5E1EA;font-size:16px;max-width:60ch}
+main .wrap{display:flex;flex-direction:column;gap:34px;padding-block:26px 30px}
+section{display:flex;flex-direction:column;gap:14px}
+h2{font-family:var(--display);font-weight:500;font-size:24px;line-height:1.15;color:var(--navy);margin:0;text-wrap:balance}
+.lead{margin:0;color:var(--ink-2)}
+.eyebrow{font-family:var(--display);font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--label)}
+.prompts{margin:0;padding:12px 14px;background:var(--tint);color:var(--ink-2);font-size:15px}
+.prompts span{display:block}
+.item{border:1px solid var(--rule);background:var(--white);display:flex;flex-direction:column}
+.item-head{display:flex;gap:10px;align-items:center;padding:12px 12px 0}
+.num{font-family:var(--display);font-size:20px;color:var(--navy);min-width:20px}
+.item input[type=text]{flex:1;min-width:0;font:inherit;font-size:16px;padding:10px;border:1px solid var(--rule);background:var(--white);color:var(--ink);border-radius:0}
+.item input[type=text]:focus,textarea:focus,.f input:focus{outline:2px solid var(--blue);outline-offset:0}
+.dollar{font-family:var(--display);font-size:18px;background:var(--navy);color:var(--white);min-width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center}
+.dollar[hidden]{display:none!important}
+.row{display:flex;flex-direction:column;gap:6px;padding:12px 12px 0}
+.row:last-child{padding-bottom:12px}
+.q{font-size:14px;color:var(--ink-2)}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1px solid var(--rule)}
+.seg button{font:inherit;font-size:14px;padding:10px 6px;border:0;border-left:1px solid var(--rule);background:var(--white);color:var(--ink);cursor:pointer;border-radius:0}
+.seg button:first-child{border-left:0}
+.seg button[aria-pressed=true]{background:var(--navy);color:var(--white)}
+.seg button:focus-visible,.btn:focus-visible,.chip:focus-visible,.link:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.word{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.word strong{font-family:var(--display);font-weight:500;font-size:18px;color:var(--navy)}
+.trail{font-size:13px;color:var(--label)}
+.btn{font:inherit;font-size:15px;padding:11px 14px;border:1px solid var(--navy);background:var(--white);color:var(--navy);cursor:pointer;border-radius:0;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;text-align:center}
+.btn.primary{background:var(--navy);color:var(--white)}
+.btn:disabled{opacity:.45;cursor:default}
+.link{font:inherit;font-size:14px;border:0;background:none;color:var(--blue);text-decoration:underline;cursor:pointer;padding:4px 0}
+.picker{border-top:1px solid var(--rule);background:var(--tint);padding:12px;display:flex;flex-direction:column;gap:10px}
+.picker .step{font-size:13px;color:var(--ink-2)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--rule);background:var(--white);color:var(--ink);cursor:pointer;border-radius:0}
+.chip.core{color:var(--white);border:0;font-family:var(--display);font-size:15px}
+.tree,.tree ul{list-style:none;margin:0;padding:0}
+.tree ul li{position:relative;padding-left:24px}
+.tree ul li::before{content:"";position:absolute;left:9px;top:0;bottom:0;border-left:2px solid var(--c)}
+.tree ul li:last-child::before{bottom:auto;height:24px}
+.tree ul li::after{content:"";position:absolute;left:9px;top:23px;width:13px;border-top:2px solid var(--c)}
+.node{font:inherit;font-size:15px;display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:42px;margin:3px 0;padding:9px 12px;border:1px solid var(--rule);background:var(--white);color:var(--ink);text-align:left;cursor:pointer;border-radius:0}
+.node.core{font-family:var(--display);font-size:16px;color:var(--white);border:0}
+.node[aria-pressed=true]{font-weight:600}
+.node .ring{font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;opacity:.75}
+.node.outer{border-color:var(--c)}
+.node:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.summary{display:flex;flex-direction:column;border-top:1px solid var(--rule)}
+.srow{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--rule)}
+.srow .st{font-family:var(--display);font-size:15px;color:var(--navy)}
+.srow .it{min-width:0;overflow-wrap:anywhere}
+.srow .wd{font-family:var(--display);color:var(--teal);text-align:right}
+.empty{color:var(--ink-2);margin:0;padding:12px 14px;background:var(--tint)}
+.count{font-family:var(--display);font-size:40px;line-height:1;color:var(--navy)}
+.f{display:flex;flex-direction:column;gap:6px}
+.f label{font-family:var(--display);font-size:17px;color:var(--navy)}
+.f input{font:inherit;font-size:16px;padding:10px;border:1px solid var(--rule);border-radius:0;background:var(--white);color:var(--ink)}
+textarea{width:100%;min-height:200px;font:inherit;font-size:14px;line-height:1.45;padding:10px;border:1px solid var(--rule);border-radius:0;background:var(--tint);color:var(--ink);resize:vertical}
+.note{font-size:14px;color:var(--ink-2);margin:0}
+.ok{font-size:14px;color:var(--teal);min-height:20px}
+.reset{border-top:1px solid var(--rule);padding-top:18px;display:flex;flex-direction:column;gap:10px}
+.roles{display:flex;flex-direction:column;border:1px solid var(--rule)}
+.roles button{font:inherit;font-size:16px;text-align:left;padding:13px 14px;border:0;border-top:1px solid var(--rule);background:var(--white);color:var(--ink);cursor:pointer;border-radius:0}
+.roles button:first-child{border-top:0}
+.roles button[aria-pressed=true]{background:var(--navy);color:var(--white)}
+.roles button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.confirm[hidden]{display:none!important}
+.confirm{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:var(--tint);padding:12px}
+footer .wrap{padding-block:18px 26px;font-family:var(--display);font-size:11px;letter-spacing:1.5px;color:var(--label);border-top:1px solid var(--rule)}
+@media (prefers-reduced-motion:no-preference){.picker{animation:in .15s ease-out}@keyframes in{from{opacity:.4}to{opacity:1}}}
+.item.circled{border:2px solid var(--red)}
+.flag{font-family:var(--display);font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--red);padding:12px 12px 0}
+.choices{display:flex;flex-direction:column;border:1px solid var(--rule)}
+.choices button{font:inherit;font-size:16px;display:flex;justify-content:space-between;gap:10px;text-align:left;padding:13px 14px;border:0;border-top:1px solid var(--rule);background:var(--white);color:var(--ink);cursor:pointer;border-radius:0}
+.choices button:first-child{border-top:0}
+.choices button .wd{font-family:var(--display);color:var(--teal);white-space:nowrap}
+.choices button[aria-pressed=true]{background:var(--white);color:var(--ink);outline:2px solid var(--red);outline-offset:-2px}
+.choices button[aria-pressed=true] .wd{color:var(--red)}
+.choices button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+</style>
+</head>
+<body>
+
+
+
+<header class="band">
+  <div class="wrap">
+    <div class="top">
+      <div class="eyebrow-h">Wireless Leadership Summit</div>
+      <svg class="mark" viewBox="0 0 1200 1253" aria-hidden="true"><polygon points="0,157 295,157 599,712 599,1253" fill="#FFFFFF"/><polygon points="904,157 1200,157 599,1253 599,712" fill="#FFFFFF"/><polygon points="410,0 789,0 599,345" fill="#CE0E2D"/></svg>
+    </div>
+    <h1>Three things</h1>
+    <p>This is the exercise from the session, on your phone. Nothing you type leaves this page. It stays in this browser until you clear it.</p>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <section aria-labelledby="h-items">
+      <h2 id="h-items">Three things that only happen when you're there</h2>
+      <p class="lead">For each one, answer the question and pick the word for how you feel about handing it off.</p>
+      <div id="items" style="display:flex;flex-direction:column;gap:12px"></div>
+    </section>
+
+    <section aria-labelledby="h-pick">
+      <h2 id="h-pick">Your first handoff</h2>
+      <p class="lead">Circle the one with a no and the strongest word. That's your first handoff, and it's the one a buyer will discount.</p>
+      <div id="pick"></div>
+    </section>
+
+    <section aria-labelledby="h-conv">
+      <h2 id="h-conv">The first conversation</h2>
+      <div class="f"><label for="c1">Who do I need to talk to first?</label><input id="c1" type="text" autocomplete="off" placeholder="My wife, my partner, my operations manager"></div>
+      <div class="f"><label for="c2">When am I going to sit down with them?</label><input id="c2" type="text" autocomplete="off" placeholder="Over dinner next Tuesday"></div>
+      <div class="f"><label for="c3">What's the first thing I'll say?</label><input id="c3" type="text" autocomplete="off" placeholder="I've started thinking about what happens when I step back"></div>
+      <div class="f"><label for="c4">Who's going to make sure I do it?</label><input id="c4" type="text" autocomplete="off" placeholder="The person I sat next to in Tucson"></div>
+    </section>
+
+    <section aria-labelledby="h-ai">
+      <h2 id="h-ai">Plan it with AI</h2>
+      <p class="lead">Your answers fill in the prompt below. Email it to yourself, then paste it into ChatGPT or Claude when you're ready, and it will help you plan the conversation and your first handoff.</p>
+      <div class="f"><label for="me">Your email</label><input id="me" type="email" autocomplete="email" inputmode="email" placeholder="you@yourcompany.com"></div>
+      <textarea id="prompt" readonly aria-label="Prompt to email"></textarea>
+      <div class="actions">
+        <a class="btn primary" id="mail" href="mailto:">Email me the prompt</a>
+      </div>
+      <div class="ok" id="copied" aria-live="polite"></div>
+    </section>
+
+    <section class="reset" aria-label="Start over">
+      <button class="link" id="reset" type="button">Start over</button>
+      <div class="confirm" id="confirm" hidden>
+        <span>Clear everything on this page?</span>
+        <button class="btn primary" id="yes" type="button">Clear it</button>
+        <button class="btn" id="no" type="button">Keep it</button>
+      </div>
+    </section>
+  </div>
+</main>
+<footer><div class="wrap">© VERITY</div></footer>
+
+<script>
+const WHEEL = [{"core": "Happy", "color": "#003A5D", "mid": [{"w": "Playful", "out": ["Aroused", "Cheeky"]}, {"w": "Content", "out": ["Free", "Joyful"]}, {"w": "Interested", "out": ["Curious", "Inquisitive"]}, {"w": "Proud", "out": ["Successful", "Confident"]}, {"w": "Accepted", "out": ["Respected", "Valued"]}, {"w": "Powerful", "out": ["Courageous", "Creative"]}, {"w": "Peaceful", "out": ["Loving", "Thankful"]}, {"w": "Trusting", "out": ["Sensitive", "Intimate"]}, {"w": "Optimistic", "out": ["Hopeful", "Inspired"]}]}, {"core": "Surprised", "color": "#00609C", "mid": [{"w": "Startled", "out": ["Shocked", "Dismayed"]}, {"w": "Confused", "out": ["Disillusioned", "Perplexed"]}, {"w": "Amazed", "out": ["Astonished", "Awe"]}, {"w": "Excited", "out": ["Eager", "Energetic"]}]}, {"core": "Bad", "color": "#000000", "mid": [{"w": "Bored", "out": ["Indifferent", "Apathetic"]}, {"w": "Busy", "out": ["Pressured", "Rushed"]}, {"w": "Stressed", "out": ["Overwhelmed", "Out of control"]}, {"w": "Tired", "out": ["Sleepy", "Unfocused"]}]}, {"core": "Fearful", "color": "#0E8A7D", "mid": [{"w": "Scared", "out": ["Helpless", "Frightened"]}, {"w": "Anxious", "out": ["Overwhelmed", "Worried"]}, {"w": "Insecure", "out": ["Inadequate", "Inferior"]}, {"w": "Weak", "out": ["Worthless", "Insignificant"]}, {"w": "Rejected", "out": ["Excluded", "Persecuted"]}, {"w": "Threatened", "out": ["Nervous", "Exposed"]}]}, {"core": "Angry", "color": "#003A5D", "mid": [{"w": "Let down", "out": ["Betrayed", "Resentful"]}, {"w": "Humiliated", "out": ["Disrespected", "Ridiculed"]}, {"w": "Bitter", "out": ["Indignant", "Violated"]}, {"w": "Mad", "out": ["Furious", "Jealous"]}, {"w": "Aggressive", "out": ["Provoked", "Hostile"]}, {"w": "Frustrated", "out": ["Infuriated", "Annoyed"]}, {"w": "Distant", "out": ["Withdrawn", "Numb"]}, {"w": "Critical", "out": ["Skeptical", "Dismissive"]}]}, {"core": "Disgusted", "color": "#00609C", "mid": [{"w": "Disapproving", "out": ["Judgmental", "Embarrassed"]}, {"w": "Disappointed", "out": ["Appalled", "Revolted"]}, {"w": "Awful", "out": ["Nauseated", "Detestable"]}, {"w": "Repelled", "out": ["Horrified", "Hesitant"]}]}, {"core": "Sad", "color": "#0E8A7D", "mid": [{"w": "Hurt", "out": ["Embarrassed", "Disappointed"]}, {"w": "Depressed", "out": ["Inferior", "Empty"]}, {"w": "Guilty", "out": ["Remorseful", "Ashamed"]}, {"w": "Despair", "out": ["Powerless", "Grief"]}, {"w": "Vulnerable", "out": ["Fragile", "Victimized"]}, {"w": "Lonely", "out": ["Abandoned", "Isolated"]}]}];
+const KEY = "verity-three-things-v1";
+const blankItem = () => ({text:"", other:"", core:"", mid:"", word:"", open:false});
+const PH = ["The county radio manager calls me first", "I price every big system bid", "I sign off on every big quote"];
+let state = {items:[blankItem(), blankItem(), blankItem()], pick:-1, conv:["","","",""], me:""};
+
+function load(){ try{ const raw = localStorage.getItem(KEY); if(raw){ const s = JSON.parse(raw); if(s && Array.isArray(s.items) && s.items.length === 3) state = Object.assign(state, s); } }catch(e){} }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+const label = (it, i) => it.text.trim() || ("Item " + (i + 1));
+
+function seg(name, value, opts, onPick){
+  const wrap = document.createElement("div"); wrap.className = "seg"; wrap.setAttribute("role","group"); wrap.setAttribute("aria-label", name);
+  opts.forEach(([v,lab]) => {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = lab;
+    b.setAttribute("aria-pressed", String(value === v));
+    b.addEventListener("click", () => onPick(value === v ? "" : v));
+    wrap.appendChild(b);
+  });
+  return wrap;
+}
+
+function tint(hex, a){
+  const n = parseInt(hex.slice(1),16), r = n>>16, g = (n>>8)&255, b = n&255;
+  const m = v => Math.round(v + (255 - v) * a).toString(16).padStart(2,"0");
+  return "#" + m(r) + m(g) + m(b);
+}
+
+function node(label, cls, pressed, ring, onClick){
+  const b = document.createElement("button"); b.type = "button"; b.className = "node" + (cls ? " " + cls : "");
+  b.setAttribute("aria-pressed", String(pressed));
+  const t = document.createElement("span"); t.textContent = label; b.append(t);
+  if(ring){ const r = document.createElement("span"); r.className = "ring"; r.textContent = ring; b.append(r); }
+  b.addEventListener("click", onClick);
+  return b;
+}
+
+function branch(color, rows){
+  const ul = document.createElement("ul"); ul.style.setProperty("--c", color);
+  rows.forEach(el => { const li = document.createElement("li"); li.append(...[].concat(el)); ul.append(li); });
+  return ul;
+}
+
+function picker(it, idx){
+  const p = document.createElement("div"); p.className = "picker";
+  const step = document.createElement("div"); step.className = "step";
+  const tree = document.createElement("div"); tree.className = "tree";
+  const core = WHEEL.find(c => c.core === it.core);
+  const mid = core && core.mid.find(m => m.w === it.mid);
+  const go = fn => () => { fn(); save(); render(); };
+  if(!core){
+    step.textContent = "Step 1 of 3. Start in the center of the wheel with the broad feeling.";
+    WHEEL.forEach(c => { const b = node(c.core, "core", false, "", go(() => { it.core = c.core; it.mid = ""; })); b.style.background = c.color; tree.append(b); });
+  } else {
+    const top = node(core.core, "core", true, "Center", go(() => { it.core = ""; it.mid = ""; })); top.style.background = core.color;
+    tree.append(top);
+    if(!mid){
+      step.textContent = "Step 2 of 3. Move out one ring. Which of these is closer? If " + core.core + " says it, stop here.";
+      tree.append(branch(core.color, core.mid.map(m => node(m.w, "", false, "", go(() => { it.mid = m.w; })))));
+    } else {
+      step.textContent = "Step 3 of 3. Move out to the edge of the wheel. Which word says exactly what you feel? If " + mid.w + " says it, stop here.";
+      const mn = node(mid.w, "", true, "Middle ring", go(() => { it.mid = ""; }));
+      mn.style.background = tint(core.color, 0.82); mn.style.borderColor = core.color;
+      const outer = branch(core.color, mid.out.map(w => { const b = node(w, "outer", false, "", go(() => { it.word = w; it.open = false; })); b.style.setProperty("--c", core.color); return b; }));
+      tree.append(branch(core.color, [[mn, outer]]));
+    }
+  }
+  const back = document.createElement("button"); back.type="button"; back.className="link";
+  back.textContent = core ? "Back a step" : "Close";
+  back.addEventListener("click", go(() => { if(mid){ it.mid=""; } else if(core){ it.core=""; } else { it.open=false; } }));
+  const hint = document.createElement("div"); hint.className = "step"; hint.textContent = core ? "Tap a word above to go back to it." : "";
+  p.append(step, tree);
+  if(core){
+    const here = mid ? mid.w : core.core;
+    const use = document.createElement("button"); use.type = "button"; use.className = "btn"; use.style.alignSelf = "flex-start";
+    use.textContent = "Stop at " + here;
+    use.addEventListener("click", go(() => { it.word = here; it.open = false; }));
+    p.append(use, hint);
+  }
+  p.append(back);
+  return p;
+}
+
+function renderItems(){
+  const host = document.getElementById("items"); host.innerHTML = "";
+  state.items.forEach((it, idx) => {
+    const card = document.createElement("div"); card.className = "item" + (state.pick === idx ? " circled" : "");
+    if(state.pick === idx){ const f = document.createElement("div"); f.className = "flag"; f.textContent = "Your first handoff"; card.append(f); }
+    const head = document.createElement("div"); head.className = "item-head";
+    const n = document.createElement("span"); n.className = "num"; n.textContent = idx + 1;
+    const inp = document.createElement("input"); inp.type = "text"; inp.id = "item-" + idx; inp.value = it.text; inp.setAttribute("aria-label", "Thing " + (idx + 1));
+    inp.placeholder = PH[idx];
+    inp.addEventListener("input", e => { it.text = e.target.value; save(); renderPick(); renderPrompt(); });
+    head.append(n, inp);
+
+    const r1 = document.createElement("div"); r1.className = "row";
+    const q1 = document.createElement("span"); q1.className = "q"; q1.textContent = "Could someone else do it if you left tomorrow?";
+    r1.append(q1, seg("Someone else could do it", it.other, [["yes","Yes"],["no","No"]], v => { it.other = v; if(v !== "no" && state.pick === idx) state.pick = -1; save(); render(); }));
+
+    const r2 = document.createElement("div"); r2.className = "row";
+    const q2 = document.createElement("span"); q2.className = "q"; q2.textContent = "How do you feel about handing it off?";
+    const w = document.createElement("div"); w.className = "word";
+    if(it.word){
+      const s = document.createElement("strong"); s.textContent = it.word;
+      const tr = document.createElement("span"); tr.className = "trail"; tr.textContent = [it.core, it.mid].filter(x => x && x !== it.word).join(" › ");
+      const ch = document.createElement("button"); ch.type = "button"; ch.className = "link"; ch.textContent = "Change";
+      ch.addEventListener("click", () => { it.open = true; it.core = ""; it.mid = ""; save(); render(); });
+      w.append(s, tr, ch);
+    } else if(!it.open){
+      const b = document.createElement("button"); b.type = "button"; b.className = "btn"; b.textContent = "Pick a word from the wheel";
+      b.addEventListener("click", () => { it.open = true; save(); render(); });
+      w.append(b);
+    }
+    r2.append(q2, w);
+    card.append(head, r1, r2);
+    if(it.open) card.append(picker(it, idx));
+    const pad = document.createElement("div"); pad.style.height = "12px"; card.append(pad);
+    host.appendChild(card);
+  });
+}
+
+function renderPick(){
+  const host = document.getElementById("pick"); host.innerHTML = "";
+  const cands = state.items.map((it, i) => ({it, i})).filter(x => x.it.other === "no");
+  if(state.pick >= 0 && !cands.some(x => x.i === state.pick)) state.pick = -1;
+  if(!cands.length){ const p = document.createElement("p"); p.className = "empty"; p.textContent = "When you answer no on one of your three, it shows up here so you can circle it."; host.append(p); return; }
+  const list = document.createElement("div"); list.className = "choices"; list.setAttribute("role","group"); list.setAttribute("aria-label","Your first handoff");
+  cands.forEach(({it, i}) => {
+    const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-pressed", String(state.pick === i));
+    const t = document.createElement("span"); t.textContent = label(it, i);
+    const wd = document.createElement("span"); wd.className = "wd"; wd.textContent = it.word || "";
+    b.append(t, wd);
+    b.addEventListener("click", () => { state.pick = state.pick === i ? -1 : i; save(); render(); });
+    list.append(b);
+  });
+  host.append(list);
+}
+
+function buildPrompt(){
+  const L = [];
+  L.push("I'd like you to coach me through a transition in my business. Act as a supportive but skeptical coach with deep experience in small business finance, team dynamics, operations and succession, including family succession. Encourage me, and push back when my thinking doesn't hold up.");
+  L.push("");
+  L.push("Before you give me any advice, ask me about the business so you understand it. Ask one question at a time, and wait for my answer before you ask the next one. Cover at least:");
+  L.push("- What the business does, how big it is, and how it makes its money.");
+  L.push("- My role, and who else owns part of it.");
+  L.push("- Who's on the leadership team, how long they've been there, and how much they run without me.");
+  L.push("- Whether this is a family succession. If it is, who in the family is involved, who works in the business and who doesn't, and how they get along.");
+  L.push("- What I want: to sell, to hand it to someone inside, or to step back and keep owning it, and on what timeline.");
+  L.push("- What I want my life to look like after the transition.");
+  L.push("If it is a family business, take the family relationships into account in everything you suggest, including what's fair to family members who work in the business and those who don't.");
+  L.push("");
+  L.push("Here's what I wrote in a session on succession. I listed three things that only happen when I'm there:");
+  const filled = state.items.map((it, i) => ({it, i})).filter(x => x.it.text.trim());
+  if(filled.length){
+    filled.forEach(({it}, k) => {
+      const parts = [];
+      parts.push("could someone else do it if I left tomorrow: " + (it.other || "not answered"));
+      if(it.word) parts.push("how I feel about handing it off: " + it.word.toLowerCase());
+      L.push((k + 1) + ". " + it.text.trim() + " (" + parts.join("; ") + ")");
+    });
+  } else {
+    L.push("(I haven't listed them yet. Ask me for them.)");
+  }
+  const picked = state.pick >= 0 ? label(state.items[state.pick], state.pick) : "";
+  if(picked) L.push("The one I circled as my first handoff: " + picked + ".");
+  const c = state.conv.map(x => (x || "").trim());
+  if(c.some(Boolean)){
+    L.push(""); L.push("My first conversation:");
+    if(c[0]) L.push("- I need to talk to " + c[0] + " first.");
+    if(c[1]) L.push("- I'm going to sit down with them " + c[1] + ".");
+    if(c[2]) L.push("- The first thing I'll say is: \"" + c[2] + "\"");
+    if(c[3]) L.push("- " + c[3] + " is going to make sure I do it.");
+  }
+  const target = picked ? "\"" + picked + "\"" : "the first one that no one else could do";
+  L.push("");
+  L.push("Once you have enough context, help me with three things:");
+  L.push("1. Plan that first conversation: what to say, what they're likely to ask or worry about, and how to answer.");
+  L.push("2. Lay out a 30-day plan to hand off " + target + ": who could take it, what they'd need to learn, what I need to stop doing, and how I'll know it's working.");
+  L.push("3. Tell me what a buyer or a successor would see as the biggest risks in what I've described, and what I'd need to change to reduce them.");
+  L.push("");
+  L.push("Keep your answers short and practical. When I give you a vague answer, ask me to be specific.");
+  return L.join("\n");
+}
+
+function renderPrompt(){
+  const p = buildPrompt();
+  document.getElementById("prompt").value = p;
+  document.getElementById("mail").href = "mailto:" + (state.me || "").replace(/[^A-Za-z0-9@._+-]/g, "") + "?subject=" + encodeURIComponent("My transition plan prompt") + "&body=" + encodeURIComponent(p.replace(/\n/g, "\r\n"));
+}
+
+function render(){ renderPick(); renderItems(); renderPrompt(); }
+
+load();
+["c1","c2","c3","c4"].forEach((id, i) => { const el = document.getElementById(id); el.value = state.conv[i] || "";
+  el.addEventListener("input", e => { state.conv[i] = e.target.value; save(); renderPrompt(); }); });
+(function(){ const me = document.getElementById("me"); me.value = state.me || "";
+  me.addEventListener("input", e => { state.me = e.target.value.trim(); save(); renderPrompt(); }); })();
+document.getElementById("mail").addEventListener("click", () => {
+  document.getElementById("copied").textContent = "Your mail app should open with the prompt in it. Press send.";
+});
+document.getElementById("reset").addEventListener("click", () => { document.getElementById("confirm").hidden = false; });
+document.getElementById("no").addEventListener("click", () => { document.getElementById("confirm").hidden = true; });
+document.getElementById("yes").addEventListener("click", () => {
+  state = {items:[blankItem(), blankItem(), blankItem()], pick:-1, conv:["","","",""], me: state.me || ""};
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  ["c1","c2","c3","c4"].forEach(id => document.getElementById(id).value = "");
+  document.getElementById("confirm").hidden = true; render(); window.scrollTo(0,0);
+});
+render();
+</script>
+
+</body>
+</html>

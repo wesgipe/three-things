@@ -145,7 +145,7 @@ footer .wrap{padding-block:18px 26px;font-family:var(--display);font-size:11px;l
 
     <section aria-labelledby="h-ai">
       <h2 id="h-ai">Plan it with AI</h2>
-      <p class="lead">Your answers fill in the prompt below. Email it to yourself, then paste it into ChatGPT or Claude when you're ready, and it will help you plan the conversation and your first handoff.</p>
+      <p class="lead">Your answers fill in the prompt below. Email it to yourself, then paste it into Claude, ChatGPT, Gemini or Grok when you're ready, and it will help you plan the conversation and your first handoff.</p>
       <div class="f"><label for="me">Your email</label><input id="me" type="email" autocomplete="email" inputmode="email" placeholder="you@yourcompany.com"></div>
       <textarea id="prompt" readonly aria-label="Prompt to email"></textarea>
       <div class="actions">
@@ -350,10 +350,28 @@ function buildPrompt(){
   return L.join("\n");
 }
 
+function mailBody(p){
+  return [
+    "Here's the prompt you built at the Wireless Leadership Summit. Keep this email so you can come back to it whenever you're ready.",
+    "",
+    "To use it:",
+    "1. Open Claude, ChatGPT, Gemini or Grok and start a new chat.",
+    "2. Copy everything between the START COPYING and STOP COPYING lines below, and leave those two lines out. On a phone, press and hold the first word of the prompt, then drag the handle down to the last word before you tap Copy.",
+    "3. Paste it into the chat and send it.",
+    "4. It will ask about your business first, one question at a time. Answer each one before it moves on, and the plan comes after it has the full picture.",
+    "",
+    "---------- START COPYING BELOW THIS LINE ----------",
+    "",
+    p,
+    "",
+    "---------- STOP COPYING ABOVE THIS LINE ----------"
+  ].join("\n");
+}
+
 function renderPrompt(){
   const p = buildPrompt();
   document.getElementById("prompt").value = p;
-  document.getElementById("mail").href = "mailto:" + (state.me || "").replace(/[^A-Za-z0-9@._+-]/g, "") + "?subject=" + encodeURIComponent("My transition plan prompt") + "&body=" + encodeURIComponent(p.replace(/\n/g, "\r\n"));
+  document.getElementById("mail").href = "mailto:" + (state.me || "").replace(/[^A-Za-z0-9@._+-]/g, "") + "?subject=" + encodeURIComponent("My transition plan prompt") + "&body=" + encodeURIComponent(mailBody(p).replace(/\n/g, "\r\n"));
 }
 
 function render(){ renderPick(); renderItems(); renderPrompt(); }

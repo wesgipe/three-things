@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>The required reality</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#003A5D;--blue:#00609C;--red:#CE0E2D;--ink:#1a1a1a;--muted:#5a6670;--line:#c9d2d9;--tint:#eef3f7;--field:#fafbfc}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#fff;color:var(--ink);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:17px;line-height:1.5;-webkit-text-size-adjust:100%}
+.wrap{max-width:640px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+header{background:var(--navy);color:#fff;padding:16px 20px 14px;border-bottom:4px solid var(--red);position:sticky;top:0;z-index:5}
+header .eyebrow{font-size:13px;letter-spacing:.03em}
+header h1{font-family:Jost,Futura,"Helvetica Neue",sans-serif;font-weight:500;font-size:24px;margin:2px 0 0}
+.bar{height:4px;background:rgba(255,255,255,.25);margin-top:10px}
+.bar span{display:block;height:4px;background:#fff;width:0}
+main{padding:20px;flex:1}
+p{margin:0 0 14px}
+label.q{display:block;font-weight:500;color:var(--navy);margin:20px 0 6px;font-size:17px}
+label.q:first-of-type{margin-top:4px}
+textarea,input[type=text],select{width:100%;font:inherit;font-size:17px;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:0;padding:10px 12px;-webkit-appearance:none;appearance:none}
+textarea{min-height:120px;resize:vertical}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--blue) 50%),linear-gradient(135deg,var(--blue) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 12px) 50%;background-size:6px 6px;background-repeat:no-repeat;padding-right:36px}
+textarea:focus,input:focus,select:focus{outline:none;border-color:var(--blue);background:#fff}
+.note{background:var(--tint);color:var(--navy);font-size:15px;padding:10px 12px;margin-top:22px}
+.err{color:var(--red);font-size:14px;margin-top:6px;display:none}
+.missing textarea,.missing input,.missing select{border-color:var(--red)}
+.missing .err{display:block}
+.sections{border-top:1px solid var(--line);margin-top:8px}
+.srow{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);font-size:16px;width:100%;background:none;border-left:0;border-right:0;border-top:0;text-align:left;color:var(--ink);font-family:inherit;cursor:pointer}
+.srow .st{color:var(--muted);font-size:14px}
+.srow .st.done{color:var(--blue)}
+.cat{border:1px solid var(--line);padding:14px;margin-top:16px}
+.cat .cathead{display:flex;justify-content:space-between;align-items:center;font-weight:500;color:var(--navy)}
+.cat .rm{background:none;border:0;color:var(--muted);font:inherit;font-size:14px;text-decoration:underline;padding:4px;cursor:pointer}
+.actions{padding:0 20px 24px;display:flex;flex-direction:column;gap:10px}
+.btn{display:block;width:100%;text-align:center;font:inherit;font-size:17px;font-weight:500;padding:14px;border:0;border-radius:0;cursor:pointer;background:var(--blue);color:#fff;text-decoration:none}
+.btn.ghost{background:#fff;color:var(--blue);border:1px solid var(--blue)}
+.btn.link{background:none;color:var(--muted);font-weight:400;font-size:15px;padding:6px}
+.btn:disabled{opacity:.45}
+.saved{font-size:13px;color:var(--muted);text-align:center;min-height:18px}
+.toast{font-size:15px;color:var(--navy);background:var(--tint);padding:10px 12px;margin-top:10px;display:none}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow" id="eyebrow">Individual reflection</div>
+  <h1 id="title">The required reality</h1>
+  <div class="bar"><span id="progress"></span></div>
+</header>
+<main id="main"></main>
+<div class="saved" id="saved"></div>
+<div class="actions" id="actions"></div>
+</div>
+
+<script>
+var EMAIL = "wes@verityled.com";
+var KEY = "required-reality-v1";
+
+var SECTIONS = [
+  {id:"structure", title:"Structure", when:"12/31/27", qs:[
+    "How is the firm organized on 12/31/27?",
+    "What is in place then that is missing today?",
+    "What did we stop or remove to get there?"],
+    note:"Monday: shared services and regional structure targeted for the end of Q1 2027."},
+  {id:"revenue", title:"Revenue", when:"12/31/27", qs:[
+    "What did the firm bill in 2027, and where did that revenue come from?",
+    "Which markets or services did we go all in on, and which did we stop pursuing?",
+    "What did you personally do each month to grow revenue?"],
+    note:"Monday: $66M gross billings, $65M net of pass-throughs."},
+  {id:"profit", title:"Profit", when:"12/31/27", qs:[
+    "What was revenue per labor dollar for 2027, and how did we get there?",
+    "What happened to labor expense, and which decisions made the difference?",
+    "What did we decide not to spend money on?"],
+    note:"Monday: 2.1 is non-negotiable. Labor is $1.8M over plan today."},
+  {id:"behavior", title:"Behavior", when:"12/31/27", qs:[
+    "What do leaders across the firm do on 12/31/27 that they don't do today?",
+    "What do you personally do differently, week to week?",
+    "What happens in this group when someone misses a commitment?"],
+    note:"Monday: accountability came up more than any other topic."},
+  {id:"other", title:"Other categories", when:"12/31/27", custom:true},
+  {id:"culture", title:"Our current culture", when:"Today", qs:[
+    "How would a new hire describe our culture after 90 days?",
+    "What does our culture reward that it shouldn't?",
+    "What does our culture tolerate that it shouldn't?"]},
+  {id:"created", title:"What created what we have", when:"Today",
+    intro:"The business is designed perfectly for the results it is producing.", qs:[
+    "Which decisions over the last two years produced where we are today?",
+    "What behavior of this group, including your own, created our 2026 results?",
+    "What did we say we would do and then not follow through on?"]}
+];
+var CATEGORIES = ["Clients","Talent and people","Leadership","Ownership and governance","Technology and AI","Operations and delivery","Custom"];
+var CAT_QS = ["What is true on 12/31/27?","What has to change to get there?"];
+
+var state = load();
+var step = state.step || 0;
+
+function load(){
+  try { var s = JSON.parse(localStorage.getItem(KEY)); if (s) return s; } catch(e) {}
+  return {name:"", a:{}, cats:[{type:"",custom:"",a:["",""]}], step:0};
+}
+var saveTimer;
+function save(){
+  state.step = step;
+  try { localStorage.setItem(KEY, JSON.stringify(state)); flash("Saved on this phone"); } catch(e) { flash(""); }
+}
+function flash(t){
+  var el = document.getElementById("saved"); el.textContent = t;
+  clearTimeout(saveTimer); saveTimer = setTimeout(function(){ el.textContent=""; }, 1500);
+}
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function ans(sid,i){ return (state.a[sid] && state.a[sid][i]) || ""; }
+function filled(v){ return v && v.trim().length > 0; }
+
+function catLabel(c){ return c.type === "Custom" ? (c.custom.trim() || "Custom") : c.type; }
+function catComplete(c){ return filled(c.type) && (c.type !== "Custom" || filled(c.custom)) && filled(c.a[0]) && filled(c.a[1]); }
+
+function sectionStatus(s){
+  if (s.custom){
+    var done = state.cats.filter(catComplete).length;
+    var complete = done > 0 && done === state.cats.length;
+    return {done: done, total: state.cats.length, complete: complete, label: done + (done===1?" category":" categories")};
+  }
+  var n = s.qs.filter(function(q,i){ return filled(ans(s.id,i)); }).length;
+  return {done:n, total:s.qs.length, complete: n===s.qs.length, label: n + " of " + s.qs.length};
+}
+function allComplete(){ return filled(state.name) && SECTIONS.every(function(s){ return sectionStatus(s).complete; }); }
+
+function setHeader(eyebrow, title, pct){
+  document.getElementById("eyebrow").textContent = eyebrow;
+  document.getElementById("title").textContent = title;
+  document.getElementById("progress").style.width = pct + "%";
+}
+
+function render(){
+  var main = document.getElementById("main"), act = document.getElementById("actions");
+  window.scrollTo(0,0);
+  if (step === 0) return renderStart(main, act);
+  if (step === SECTIONS.length + 1) return renderReview(main, act);
+  var s = SECTIONS[step-1];
+  setHeader(step + " of " + SECTIONS.length + " · " + s.when, s.title, Math.round(step/(SECTIONS.length+1)*100));
+  var h = "";
+  if (s.intro) h += "<p>" + esc(s.intro) + "</p>";
+  if (s.custom) h += renderCats();
+  else s.qs.forEach(function(q,i){
+    h += '<div class="field" data-s="'+s.id+'" data-i="'+i+'"><label class="q" for="'+s.id+i+'">'+esc(q)+'</label>'+
+         '<textarea id="'+s.id+i+'" data-s="'+s.id+'" data-i="'+i+'">'+esc(ans(s.id,i))+'</textarea><div class="err">Answer this question before you move on.</div></div>';
+  });
+  if (s.note) h += '<div class="note">'+esc(s.note)+'</div>';
+  main.innerHTML = h;
+  var next = step === SECTIONS.length ? "Review and send" : "Next: " + SECTIONS[step].title;
+  act.innerHTML = '<button class="btn" id="next">'+esc(next)+'</button><button class="btn link" id="back">Back</button>';
+  bindFields();
+  document.getElementById("next").onclick = function(){ if (validate(s)) { step++; save(); render(); } };
+  document.getElementById("back").onclick = function(){ step--; save(); render(); };
+}
+
+function renderCats(){
+  var h = "<p>Choose each category that belongs in the picture of 12/31/27 and answer both questions for every one you add. Add at least one.</p>";
+  state.cats.forEach(function(c,ci){
+    var used = state.cats.map(function(x,xi){ return xi!==ci ? x.type : null; });
+    var opts = '<option value="">Choose a category</option>' + CATEGORIES.filter(function(o){ return o==="Custom" || used.indexOf(o)<0; }).map(function(o){
+      return '<option value="'+esc(o)+'"'+(c.type===o?" selected":"")+'>'+esc(o==="Custom"?"Custom (name your own)":o)+'</option>'; }).join("");
+    h += '<div class="cat" data-ci="'+ci+'"><div class="cathead"><span>Category '+(ci+1)+'</span>'+(state.cats.length>1?'<button class="rm" data-rm="'+ci+'">Remove</button>':'')+'</div>'+
+      '<div class="field cf" data-k="type"><label class="q" for="ct'+ci+'">Category</label><select id="ct'+ci+'" data-ci="'+ci+'" data-k="type">'+opts+'</select><div class="err">Choose a category.</div></div>'+
+      (c.type==="Custom" ? '<div class="field cf" data-k="custom"><label class="q" for="cc'+ci+'">Name your category</label><input type="text" id="cc'+ci+'" data-ci="'+ci+'" data-k="custom" value="'+esc(c.custom)+'"><div class="err">Name your category.</div></div>' : '')+
+      CAT_QS.map(function(q,qi){ return '<div class="field cf" data-k="a'+qi+'"><label class="q" for="ca'+ci+qi+'">'+esc(q)+'</label><textarea id="ca'+ci+qi+'" data-ci="'+ci+'" data-k="a'+qi+'">'+esc(c.a[qi])+'</textarea><div class="err">Answer this question before you move on.</div></div>'; }).join("")+
+      '</div>';
+  });
+  if (state.cats.length < CATEGORIES.length) h += '<button class="btn ghost" id="addcat" style="margin-top:16px">Add another category</button>';
+  return h;
+}
+
+function bindFields(){
+  document.querySelectorAll("textarea[data-s]").forEach(function(t){
+    t.addEventListener("input", function(){
+      var sid=t.dataset.s, i=+t.dataset.i; state.a[sid]=state.a[sid]||[]; state.a[sid][i]=t.value;
+      t.parentNode.classList.remove("missing"); save();
+    });
+  });
+  document.querySelectorAll("[data-ci][data-k]").forEach(function(el){
+    var ev = el.tagName==="SELECT" ? "change" : "input";
+    el.addEventListener(ev, function(){
+      var c = state.cats[+el.dataset.ci], k = el.dataset.k;
+      if (k==="type"){ c.type = el.value; if (c.type!=="Custom") c.custom=""; save(); render(); return; }
+      if (k==="custom") c.custom = el.value; else c.a[+k.slice(1)] = el.value;
+      el.parentNode.classList.remove("missing"); save();
+    });
+  });
+  document.querySelectorAll("[data-rm]").forEach(function(b){
+    b.onclick = function(){ state.cats.splice(+b.dataset.rm,1); save(); render(); };
+  });
+  var add = document.getElementById("addcat");
+  if (add) add.onclick = function(){ state.cats.push({type:"",custom:"",a:["",""]}); save(); render();
+    var cats=document.querySelectorAll(".cat"); cats[cats.length-1].scrollIntoView({behavior:"smooth"}); };
+}
+
+function validate(s){
+  var first=null;
+  if (s.custom){
+    state.cats.forEach(function(c,ci){
+      var box=document.querySelector('.cat[data-ci="'+ci+'"]');
+      var checks={type:filled(c.type), custom:c.type!=="Custom"||filled(c.custom), a0:filled(c.a[0]), a1:filled(c.a[1])};
+      Object.keys(checks).forEach(function(k){
+        var f=box.querySelector('.cf[data-k="'+k+'"]'); if(!f) return;
+        if(!checks[k]){ f.classList.add("missing"); first=first||f; }
+      });
+    });
+  } else {
+    s.qs.forEach(function(q,i){ if(!filled(ans(s.id,i))){ var f=document.querySelector('.field[data-s="'+s.id+'"][data-i="'+i+'"]'); f.classList.add("missing"); first=first||f; } });
+  }
+  if (first){ first.scrollIntoView({behavior:"smooth",block:"center"}); return false; }
+  return true;
+}
+
+function renderStart(main, act){
+  setHeader("Individual reflection","The required reality",0);
+  var h = "<p>Picture the firm on December 31, 2027. Complete every section, including at least one category of your own choosing in section 5. Answer to the best of your ability and move on. Honest answers serve us better than polished ones.</p>"+
+    "<p>Your answers save on this phone as you type. Send unlocks once every section is complete.</p>"+
+    '<div class="field" id="namef"><label class="q" for="name">Your name</label><input type="text" id="name" autocomplete="name" value="'+esc(state.name)+'"><div class="err">Enter your name to begin.</div></div>'+
+    '<div class="sections" style="margin-top:22px">'+SECTIONS.map(function(s,i){ var st=sectionStatus(s);
+      return '<button class="srow" data-go="'+(i+1)+'"><span>'+(i+1)+'. '+esc(s.title)+'</span><span class="st'+(st.complete?" done":"")+'">'+(st.complete?"Complete":esc(st.label))+'</span></button>'; }).join("")+'</div>';
+  main.innerHTML = h;
+  act.innerHTML = '<button class="btn" id="begin">'+(Object.keys(state.a).length?"Continue":"Begin")+'</button>';
+  var n=document.getElementById("name");
+  n.addEventListener("input",function(){ state.name=n.value; document.getElementById("namef").classList.remove("missing"); save(); });
+  function need(){ if(!filled(state.name)){ document.getElementById("namef").classList.add("missing"); n.focus(); return false;} return true; }
+  document.getElementById("begin").onclick=function(){ if(!need())return;
+    var firstOpen = SECTIONS.findIndex(function(s){ return !sectionStatus(s).complete; });
+    step = firstOpen<0 ? SECTIONS.length+1 : firstOpen+1; save(); render(); };
+  document.querySelectorAll("[data-go]").forEach(function(b){ b.onclick=function(){ if(!need())return; step=+b.dataset.go; save(); render(); }; });
+}
+
+function buildText(){
+  var L=[];
+  L.push("THE REQUIRED REALITY: INDIVIDUAL REFLECTION");
+  L.push("Name: "+state.name.trim());
+  L.push("Sent: "+new Date().toLocaleString());
+  SECTIONS.forEach(function(s,i){
+    L.push(""); L.push("== "+(i+1)+". "+s.title.toUpperCase()+" ("+s.when+") ==");
+    if (s.custom){
+      state.cats.filter(catComplete).forEach(function(c){
+        L.push(""); L.push("Category: "+catLabel(c));
+        CAT_QS.forEach(function(q,qi){ L.push("Q: "+q); L.push("A: "+c.a[qi].trim()); });
+      });
+    } else s.qs.forEach(function(q,qi){ L.push(""); L.push("Q: "+q); L.push("A: "+ans(s.id,qi).trim()); });
+  });
+  return L.join("\n");
+}
+
+function renderReview(main, act){
+  setHeader(SECTIONS.length+" of "+SECTIONS.length+" · Done","Review and send",100);
+  var ok = allComplete();
+  var h = '<div class="sections">'+SECTIONS.map(function(s,i){ var st=sectionStatus(s);
+    return '<button class="srow" data-go="'+(i+1)+'"><span>'+(i+1)+'. '+esc(s.title)+'</span><span class="st'+(st.complete?" done":"")+'">'+(st.complete?esc(st.label):"Incomplete")+'</span></button>'; }).join("")+'</div>';
+  h += ok ? "<p style=\"margin-top:18px\">Send opens your mail app with your answers filled in. Tap send there. If your mail app doesn't open, use Copy answers and paste them into an email to "+EMAIL+".</p>"
+          : "<p style=\"margin-top:18px\">Tap any section marked incomplete to finish it. Send unlocks once every section is complete.</p>";
+  h += '<div class="toast" id="toast"></div>';
+  main.innerHTML = h;
+  act.innerHTML = '<button class="btn" id="send"'+(ok?"":" disabled")+'>Send my answers</button>'+
+    '<button class="btn ghost" id="copy"'+(ok?"":" disabled")+'>Copy answers</button><button class="btn link" id="back">Back</button>';
+  document.querySelectorAll("[data-go]").forEach(function(b){ b.onclick=function(){ step=+b.dataset.go; save(); render(); }; });
+  document.getElementById("back").onclick=function(){ step--; save(); render(); };
+  if (!ok) return;
+  document.getElementById("send").onclick=function(){
+    var subj="Reflection: "+state.name.trim();
+    var body=buildText().replace(/\n/g,"\r\n");
+    window.location.href="mailto:"+EMAIL+"?subject="+encodeURIComponent(subj)+"&body="+encodeURIComponent(body);
+  };
+  document.getElementById("copy").onclick=function(){
+    var t=buildText(), toast=document.getElementById("toast");
+    function done(){ toast.textContent="Copied. Paste into an email to "+EMAIL+"."; toast.style.display="block"; }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(done, fallback); else fallback();
+    function fallback(){ var ta=document.createElement("textarea"); ta.value=t; ta.style.position="absolute"; ta.style.left="-9999px"; document.body.appendChild(ta); ta.select(); try{document.execCommand("copy"); done();}catch(e){} document.body.removeChild(ta); }
+  };
+}
+
+render();
+</script>
+</body>
+</html>

@@ -47,6 +47,18 @@ textarea:focus,input:focus,select:focus{outline:none;border-color:var(--blue);ba
 .saved{font-size:13px;color:var(--muted);text-align:center;min-height:18px}
 .toast{font-size:15px;color:var(--navy);background:var(--tint);padding:10px 12px;margin-top:10px;display:none}
 .hidden{display:none}
+.stmt{border-top:1px solid var(--line);padding-top:16px;margin-top:18px}
+.stmt .sn{font-size:14px;color:var(--muted)}
+.stmt .st1{font-weight:500;color:var(--navy);margin:2px 0 10px}
+.scale{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.scale button{font:inherit;font-size:17px;padding:12px 0;border:1px solid var(--blue);background:#fff;color:var(--blue);border-radius:0;cursor:pointer}
+.scale button.on{background:var(--blue);color:#fff}
+.ends{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:4px}
+.chosen{font-size:14px;color:var(--navy);min-height:20px;margin-top:4px}
+.missing .scale button{border-color:var(--red)}
+.stmt textarea{min-height:70px}
+.stmt.missing textarea{border-color:var(--line)}
+.why{font-size:14px;color:var(--muted);margin:10px 0 4px;display:block}
 </style>
 </head>
 <body>
@@ -96,9 +108,23 @@ var SECTIONS = [
     intro:"The business is designed perfectly for the results it is producing.", qs:[
     "Which decisions over the last two years produced where we are today?",
     "What behavior of this group, including your own, created our 2026 results?",
-    "What did we say we would do and then not follow through on?"]}
+    "What did we say we would do and then not follow through on?"]},
+  {id:"stand", title:"Where I stand", when:"Today", rating:true}
 ];
 var CATEGORIES = ["Clients","Talent and people","Leadership","Ownership and governance","Technology and AI","Operations and delivery","Custom"];
+var STATEMENTS = [
+  "\"Too busy\" has become the reason we drop communication and planning.",
+  "We need to reduce staff now instead of counting on attrition.",
+  "We should finish this year's staffing conversations before the holidays instead of waiting until January.",
+  "Our leaders haven't been taught how to hold people accountable, and we've tolerated it.",
+  "A colleague who didn't perform shouldn't receive a 2026 bonus, even if their leader never managed their performance.",
+  "We should move to shared services and regions on January 1 instead of phasing them in.",
+  "Revenue per labor dollar of 2.1 is non-negotiable for 2027.",
+  "Moving to shared services and regions won't fix problems that come from our behavior.",
+  "Staff reductions should happen quietly, one conversation at a time, with no firm-wide announcement.",
+  "We've waited too long to act on performance problems we already knew about."
+];
+var SCALE = ["Strongly disagree","Disagree","Slightly disagree","Slightly agree","Agree","Strongly agree"];
 var CAT_QS = ["What is true on 12/31/27?","What has to change to get there?"];
 
 var state = load();
@@ -130,6 +156,10 @@ function sectionStatus(s){
     var complete = done > 0 && done === state.cats.length;
     return {done: done, total: state.cats.length, complete: complete, label: done + (done===1?" category":" categories")};
   }
+  if (s.rating){
+    var r = (state.r||[]).filter(function(v){ return v>0; }).length;
+    return {done:r, total:STATEMENTS.length, complete: r===STATEMENTS.length, label: r + " of " + STATEMENTS.length};
+  }
   var n = s.qs.filter(function(q,i){ return filled(ans(s.id,i)); }).length;
   return {done:n, total:s.qs.length, complete: n===s.qs.length, label: n + " of " + s.qs.length};
 }
@@ -151,6 +181,7 @@ function render(){
   var h = "";
   if (s.intro) h += "<p>" + esc(s.intro) + "</p>";
   if (s.custom) h += renderCats();
+  else if (s.rating) h += renderRatings();
   else s.qs.forEach(function(q,i){
     h += '<div class="field" data-s="'+s.id+'" data-i="'+i+'"><label class="q" for="'+s.id+i+'">'+esc(q)+'</label>'+
          '<textarea id="'+s.id+i+'" data-s="'+s.id+'" data-i="'+i+'">'+esc(ans(s.id,i))+'</textarea><div class="err">Answer this question before you move on.</div></div>';
@@ -162,6 +193,21 @@ function render(){
   bindFields();
   document.getElementById("next").onclick = function(){ if (validate(s)) { step++; save(); render(); } };
   document.getElementById("back").onclick = function(){ step--; save(); render(); };
+}
+
+function renderRatings(){
+  state.r = state.r || []; state.rw = state.rw || [];
+  var h = "<p>Each statement came out of Monday's discussion. Rate how strongly you agree with each one. Explaining why is optional.</p>";
+  STATEMENTS.forEach(function(t,i){
+    var v = state.r[i] || 0;
+    h += '<div class="stmt field" data-r="'+i+'"><div class="sn">Statement '+(i+1)+' of '+STATEMENTS.length+'</div><div class="st1">'+esc(t)+'</div>'+
+      '<div class="scale">'+SCALE.map(function(l,k){ return '<button type="button" data-ri="'+i+'" data-rv="'+(k+1)+'" aria-label="'+esc(l)+'"'+(v===k+1?' class="on"':'')+'>'+(k+1)+'</button>'; }).join("")+'</div>'+
+      '<div class="ends"><span>Strongly disagree</span><span>Strongly agree</span></div>'+
+      '<div class="chosen" id="ch'+i+'">'+(v?esc(SCALE[v-1]):"")+'</div>'+
+      '<div class="err">Choose a rating.</div>'+
+      '<label class="why" for="rw'+i+'">Why? (optional)</label><textarea id="rw'+i+'" data-rw="'+i+'">'+esc(state.rw[i]||"")+'</textarea></div>';
+  });
+  return h;
 }
 
 function renderCats(){
@@ -199,6 +245,17 @@ function bindFields(){
   document.querySelectorAll("[data-rm]").forEach(function(b){
     b.onclick = function(){ state.cats.splice(+b.dataset.rm,1); save(); render(); };
   });
+  document.querySelectorAll("[data-rv]").forEach(function(b){
+    b.onclick = function(){
+      var i=+b.dataset.ri, v=+b.dataset.rv; state.r[i]=v; save();
+      document.querySelectorAll('[data-ri="'+i+'"]').forEach(function(x){ x.classList.toggle("on", +x.dataset.rv===v); });
+      document.getElementById("ch"+i).textContent = SCALE[v-1];
+      b.closest(".stmt").classList.remove("missing");
+    };
+  });
+  document.querySelectorAll("textarea[data-rw]").forEach(function(t){
+    t.addEventListener("input", function(){ state.rw[+t.dataset.rw]=t.value; save(); });
+  });
   var add = document.getElementById("addcat");
   if (add) add.onclick = function(){ state.cats.push({type:"",custom:"",a:["",""]}); save(); render();
     var cats=document.querySelectorAll(".cat"); cats[cats.length-1].scrollIntoView({behavior:"smooth"}); };
@@ -215,6 +272,8 @@ function validate(s){
         if(!checks[k]){ f.classList.add("missing"); first=first||f; }
       });
     });
+  } else if (s.rating){
+    STATEMENTS.forEach(function(t,i){ if(!(state.r[i]>0)){ var f=document.querySelector('.stmt[data-r="'+i+'"]'); f.classList.add("missing"); first=first||f; } });
   } else {
     s.qs.forEach(function(q,i){ if(!filled(ans(s.id,i))){ var f=document.querySelector('.field[data-s="'+s.id+'"][data-i="'+i+'"]'); f.classList.add("missing"); first=first||f; } });
   }
@@ -252,6 +311,9 @@ function buildText(){
         L.push(""); L.push("Category: "+catLabel(c));
         CAT_QS.forEach(function(q,qi){ L.push("Q: "+q); L.push("A: "+c.a[qi].trim()); });
       });
+    } else if (s.rating){
+      STATEMENTS.forEach(function(t,ri){ L.push(""); L.push((ri+1)+". "+t); L.push("Rating: "+state.r[ri]+" of 6 ("+SCALE[state.r[ri]-1]+")");
+        var w=(state.rw&&state.rw[ri]||"").trim(); if(w) L.push("Why: "+w); });
     } else s.qs.forEach(function(q,qi){ L.push(""); L.push("Q: "+q); L.push("A: "+ans(s.id,qi).trim()); });
   });
   return L.join("\n");

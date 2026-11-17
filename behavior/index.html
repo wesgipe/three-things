@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>What HEAPY needs from me next</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+<style>
+
+:root{--navy:#003A5D;--blue:#00609C;--red:#CE0E2D;--ink:#1a1a1a;--muted:#5a6670;--line:#c9d2d9;--tint:#eef3f7;--field:#fafbfc}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#fff;color:var(--ink);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:17px;line-height:1.5;-webkit-text-size-adjust:100%}
+.wrap{max-width:640px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+header{background:var(--navy);color:#fff;padding:16px 20px 14px;border-bottom:4px solid var(--red);position:sticky;top:0;z-index:5}
+header .eyebrow{font-size:13px;letter-spacing:.03em}
+header .hrow{display:flex;flex-direction:row-reverse;justify-content:space-between;align-items:center;gap:14px}
+header .vmark{width:38px;height:auto;flex:none}
+header h1{font-family:Jost,Futura,"Helvetica Neue",sans-serif;font-weight:500;font-size:24px;margin:2px 0 0}
+.bar{height:4px;background:rgba(255,255,255,.25);margin-top:10px}
+.bar span{display:block;height:4px;background:#fff;width:0}
+main{padding:20px;flex:1}
+p{margin:0 0 14px}
+label.q{display:block;font-weight:500;color:var(--navy);margin:20px 0 6px;font-size:17px}
+label.q:first-of-type{margin-top:4px}
+textarea,input[type=text],select{width:100%;font:inherit;font-size:17px;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:0;padding:10px 12px;-webkit-appearance:none;appearance:none}
+textarea{min-height:120px;resize:vertical}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--blue) 50%),linear-gradient(135deg,var(--blue) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 12px) 50%;background-size:6px 6px;background-repeat:no-repeat;padding-right:36px}
+textarea:focus,input:focus,select:focus{outline:none;border-color:var(--blue);background:#fff}
+.note{background:var(--tint);color:var(--navy);font-size:15px;padding:10px 12px;margin-top:22px}
+.err{color:var(--red);font-size:14px;margin-top:6px;display:none}
+.missing textarea,.missing input,.missing select{border-color:var(--red)}
+.missing .err{display:block}
+.sections{border-top:1px solid var(--line);margin-top:8px}
+.srow{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);font-size:16px;width:100%;background:none;border-left:0;border-right:0;border-top:0;text-align:left;color:var(--ink);font-family:inherit;cursor:pointer}
+.srow .st{color:var(--muted);font-size:14px}
+.srow .st.done{color:var(--blue)}
+.cat{border:1px solid var(--line);padding:14px;margin-top:16px}
+.cat .cathead{display:flex;justify-content:space-between;align-items:center;font-weight:500;color:var(--navy)}
+.cat .rm{background:none;border:0;color:var(--muted);font:inherit;font-size:14px;text-decoration:underline;padding:4px;cursor:pointer}
+.actions{padding:0 20px 24px;display:flex;flex-direction:column;gap:10px}
+.btn{display:block;width:100%;text-align:center;font:inherit;font-size:17px;font-weight:500;padding:14px;border:0;border-radius:0;cursor:pointer;background:var(--blue);color:#fff;text-decoration:none}
+.btn.ghost{background:#fff;color:var(--blue);border:1px solid var(--blue)}
+.btn.link{background:none;color:var(--muted);font-weight:400;font-size:15px;padding:6px}
+.btn:disabled{opacity:.45}
+.saved{font-size:13px;color:var(--muted);text-align:center;min-height:18px}
+.toast{font-size:15px;color:var(--navy);background:var(--tint);padding:10px 12px;margin-top:10px;display:none}
+.hidden{display:none}
+.stmt{border-top:1px solid var(--line);padding-top:16px;margin-top:18px}
+.stmt .sn{font-size:14px;color:var(--muted)}
+.stmt .st1{font-weight:500;color:var(--navy);margin:2px 0 10px}
+.scale{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.scale button{font:inherit;font-size:17px;padding:12px 0;border:1px solid var(--blue);background:#fff;color:var(--blue);border-radius:0;cursor:pointer}
+.scale button.on{background:var(--blue);color:#fff}
+.ends{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:4px}
+.chosen{font-size:14px;color:var(--navy);min-height:20px;margin-top:4px}
+.missing .scale button{border-color:var(--red)}
+.stmt textarea{min-height:70px}
+.stmt.missing textarea{border-color:var(--line)}
+.why{font-size:14px;color:var(--muted);margin:10px 0 4px;display:block}
+
+.beh{border:1px solid var(--line);padding:14px;margin-top:16px}
+.beh .cathead{display:flex;justify-content:space-between;align-items:center;font-weight:500;color:var(--navy)}
+.pick{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);padding:12px;margin-top:10px;cursor:pointer;font-size:16px}
+.pick input{width:22px;height:22px;flex:none;margin-top:2px;accent-color:var(--blue)}
+.pick .tag{display:block;font-size:13px;color:var(--muted)}
+.pick.on{border-color:var(--blue);background:var(--tint)}
+input[type=date]{width:100%;font:inherit;font-size:17px;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:0;padding:10px 12px;-webkit-appearance:none;appearance:none;min-height:46px}
+.acc{border-top:1px solid var(--line);margin-top:22px;padding-top:6px}
+.acc h2{font-family:Jost,Futura,"Helvetica Neue",sans-serif;font-weight:500;font-size:19px;color:var(--navy);margin:12px 0 0}
+.acc .kind{font-size:13px;color:var(--muted)}
+.missing input[type=date]{border-color:var(--red)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="hrow"><img class="vmark" alt="Verity" src="data:image/png;base64,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">
+  <div><div class="eyebrow" id="eyebrow">Individual plan</div>
+  <h1 id="title">What HEAPY needs from me next</h1></div></div>
+  <div class="bar"><span id="progress"></span></div>
+</header>
+<main id="main"></main>
+<div class="saved" id="saved"></div>
+<div class="actions" id="actions"></div>
+</div>
+
+<script>
+/* ===== CONTENT: edit here ===== */
+var CC = "mtbrumfield@heapy.com";
+var KEY = "heapy-needs-next-v1";
+var TOOL = "What HEAPY needs from me next";
+var INTRO = [
+  "This takes you step by step through the behavior the business will need from you personally between now and December 31, 2027, both what you need to do more of and what you need to do less of, and how you'll hold yourself accountable.",
+  "Complete every step. Answer to the best of your ability and move on. Honest answers serve you better than polished ones.",
+  "Your answers save on this phone as you type. At the end, Send emails your answers and a custom AI prompt to you, with a copy to Mark. Paste the prompt into Claude, ChatGPT or Copilot to build your plan."
+];
+var BACK = {title:"Looking back", qs:[
+  "What did I personally do, or fail to do, that helped produce our 2026 results?",
+  "What do I do naturally that has served me well and now gets in the way?",
+  "Where am I doing the same things I'm frustrated with in other people?"
+]};
+var MORE = {title:"More of", min:1, max:3,
+  intro:"List up to three behaviors the business needs you to do more of. Write each one as something someone else could see you do. Examples from today: making one in five decisions on my own without waiting for C-suite approval, ending every discussion with a decision, an owner and a date, and defining the problem before I propose a solution.",
+  fields:[
+    {k:"b", q:"The behavior", short:true},
+    {k:"why", q:"Why it's unnatural for me"},
+    {k:"well", q:"What it looks like when I'm doing it well"}
+  ]};
+var LESS = {title:"Less of", min:1, max:3,
+  intro:"List up to three behaviors the business needs you to do less of. Write each one as something someone else could see you do. Examples from today: saying I'm too busy, complaining or listening to complaints without acting, us versus them, keeping score between departments, and re-opening decisions we've already made.",
+  fields:[
+    {k:"b", q:"The behavior I need to do less of", short:true},
+    {k:"gets", q:"What it gets me today, meaning why I keep doing it"},
+    {k:"cost", q:"What it costs the firm or the people around me"},
+    {k:"instead", q:"What I'll do instead in the moment I catch myself"}
+  ]};
+var ESS = {title:"Essential behaviors", min:2, max:3,
+  intro:"Choose the two or three behaviors from your lists that matter most to where the firm needs to be on December 31, 2027. You'll build accountability for each one next."};
+var ACC = {title:"Accountability",
+  intro:"For each essential behavior, set up how you'll make the shift and who will hold you to it.",
+  fields:[
+    {k:"first", q:"My first action"},
+    {k:"firstDate", q:"The date I'll take it", type:"date"},
+    {k:"deadline", q:"My deadline for this to show up consistently", type:"date"},
+    {k:"measure", q:"How I'll measure it, meaning what someone will see or count"},
+    {k:"who", q:"Who will hold me accountable", short:true},
+    {k:"how", q:"How they'll do it", type:"select", options:["Weekly one-on-one","C-suite meeting","Peer partner","Coaching session","Written update","Other"]},
+    {k:"howOther", q:"Describe how", short:true, showIf:["how","Other"]},
+    {k:"slip", q:"What I'll do when I slip"},
+    {k:"support", q:"What support I need"}
+  ]};
+var PROMPT_HEAD = [
+  "You are an executive coach working with a member of the C-suite at HEAPY, an 80-year-old MEP engineering firm with more than 400 colleagues. HEAPY includes HEAPY Engineering and HEAPY Solutions, its design-build construction company. Below are my answers from a guided reflection on the personal behavior HEAPY will need from me through December 31, 2027.",
+  "",
+  "What you need to know about HEAPY right now:",
+  "- 2026 results fell well short of plan. Sales ran about 30% behind, and profit came in far below target.",
+  "- Revenue per labor dollar of 2.1, as a firm-wide annual average, is non-negotiable for 2027.",
+  "- On November 17, 2026, the C-suite committed to a net reduction of $1 million in annual salary before the end of 2026.",
+  "- The C-suite identified these patterns in its own behavior: decisions made months after the data was clear, meetings after the meeting, \"too busy\" as the reason communication and planning get dropped, tolerating poor performance through repeated improvement plans, leaders who say they don't know how to hold people accountable, placating people with influence, and strong ideas with weak execution.",
+  "- The CEO has committed to stop absorbing blame for other people's results, to stop trying to build consensus before acting, and to stop tolerating people who don't execute. The firm is moving from \"colleague first\" to \"right colleague first.\"",
+  "- On the afternoon of November 17, the C-suite agreed to: consistent commitment to the 2027 outcomes and the behavior expected of each leader; each member being 20% more directive, meaning one in five decisions made without waiting for the group, and the CEO 30%; peer-to-peer accountability with agreed rules of engagement; defining the problem before proposing solutions; meetings that end in a decision; and thinking about the whole firm before my own department.",
+  "- The group was told it exhibits the behavior it complains about, and that the first question in most discussions is \"how will this affect me?\" The closing charge was to stay together.",
+  "- The question behind this work: a year from now, will this group look back on this week with regret or with nostalgia?",
+  "",
+  "How to coach me:",
+  "- Be understanding and direct. Treat me as the experienced professional I am, and expect me to act like one.",
+  "- Ask for evidence, not feelings. When I describe a behavior, a cause or a result, ask what I saw, what the numbers show, who was involved and when. Don't accept \"I feel,\" \"I think\" or \"people say\" until it's tied to something someone could observe or count.",
+  "- Push back where a behavior isn't something another person could see me do, where a measure can't be seen or counted, where a date is vague, or where I'm describing someone else's behavior instead of my own.",
+  "- Test every behavior I list against the commitments above. If my plan doesn't make me more directive, more accountable to my peers or more focused on the whole firm, ask why.",
+  "- Push me to decide. Where I hedge, wait for more information or offer more than one option, point it out, ask what it would take to decide today, and ask me to choose.",
+  "- Before you write the plan, ask up to five clarifying questions, one at a time, and wait for each answer.",
+  "- Use only what I wrote and what I tell you. Don't invent facts, names, numbers or dates.",
+  "- Write in plain language, in the first person, with real calendar dates.",
+  "",
+  "When we're done with questions, write my plan in exactly this structure:",
+  "1. Header: my name, today's date, and the plan period through December 31, 2027",
+  "2. Commitment: a short statement in my own words",
+  "3. The behaviors: what I'll do more of and less of, each tied to where HEAPY needs to be on December 31, 2027",
+  "4. For each essential behavior:",
+  "   - From and to: what I do now and what I'll do instead",
+  "   - First action and date",
+  "   - 30, 60 and 90 day milestones, with dates",
+  "   - Measure",
+  "   - Accountability partner and method",
+  "   - Check-in cadence",
+  "   - What I do when I slip",
+  "5. Check-in calendar through March 31, 2027, as a table with date, behavior, who and what we review",
+  "",
+  "My answers:" ];
+/* ===== END CONTENT ===== */
+
+var STEPS = ["start","back","more","less","ess","acc","review"];
+var state = load();
+var step = state.step || 0;
+function blank(fields){ var o={}; fields.forEach(function(f){ o[f.k]=""; }); return o; }
+function load(){
+  try { var s = JSON.parse(localStorage.getItem(KEY)); if (s) { BACK.qs.forEach(function(q,i){ if(s.back[i]==null) s.back[i]=""; }); return s; } } catch(e) {}
+  return {name:"", email:"", back:BACK.qs.map(function(){return "";}), more:[blank(MORE.fields)], less:[blank(LESS.fields)], ess:[], acc:{}, step:0};
+}
+var saveTimer;
+function save(){ state.step=step; try{ localStorage.setItem(KEY, JSON.stringify(state)); flash("Saved on this phone"); }catch(e){} }
+function flash(t){ var el=document.getElementById("saved"); el.textContent=t; clearTimeout(saveTimer); saveTimer=setTimeout(function(){ el.textContent=""; },1500); }
+function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function filled(v){ return v!=null && String(v).trim().length>0; }
+function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v||"").trim()); }
+function fmtDate(d){ if(!d) return ""; var p=d.split("-"); var m=["January","February","March","April","May","June","July","August","September","October","November","December"]; return m[+p[1]-1]+" "+(+p[2])+", "+p[0]; }
+
+function behaviors(){
+  var out=[];
+  state.more.forEach(function(b,i){ if(filled(b.b)) out.push({id:"m"+i, kind:"More of", text:b.b.trim()}); });
+  state.less.forEach(function(b,i){ if(filled(b.b)) out.push({id:"l"+i, kind:"Less of", text:b.b.trim()}); });
+  return out;
+}
+function essList(){ var all=behaviors(); return state.ess.map(function(id){ return all.filter(function(b){return b.id===id;})[0]; }).filter(Boolean); }
+function accFor(id){ state.acc[id]=state.acc[id]||blank(ACC.fields); return state.acc[id]; }
+function fieldShown(f,obj){ return !f.showIf || obj[f.showIf[0]]===f.showIf[1]; }
+function groupComplete(list,fields){ return list.length>0 && list.every(function(o){ return fields.every(function(f){ return filled(o[f.k]); }); }); }
+
+function status(name){
+  if(name==="back"){ var n=state.back.filter(filled).length; return {complete:n===BACK.qs.length,label:n+" of "+BACK.qs.length}; }
+  if(name==="more"){ var c=groupComplete(state.more,MORE.fields); return {complete:c,label:state.more.length+(state.more.length===1?" behavior":" behaviors")}; }
+  if(name==="less"){ var c2=groupComplete(state.less,LESS.fields); return {complete:c2,label:state.less.length+(state.less.length===1?" behavior":" behaviors")}; }
+  if(name==="ess"){ var e=essList().length; return {complete:e>=ESS.min&&e<=ESS.max,label:e+" chosen"}; }
+  if(name==="acc"){ var L=essList(); var ok=L.length>=ESS.min && L.every(function(b){ var a=accFor(b.id); return ACC.fields.every(function(f){ return !fieldShown(f,a)||filled(a[f.k]); }); }); return {complete:ok,label:ok?"Complete":"Incomplete"}; }
+  return {complete:true,label:""};
+}
+var TITLES={back:BACK.title,more:MORE.title,less:LESS.title,ess:ESS.title,acc:ACC.title};
+var SECTIONS=["back","more","less","ess","acc"];
+function allComplete(){ return filled(state.name) && validEmail(state.email) && SECTIONS.every(function(s){ return status(s).complete; }); }
+
+function setHeader(eyebrow,title,pct){ document.getElementById("eyebrow").textContent=eyebrow; document.getElementById("title").textContent=title; document.getElementById("progress").style.width=pct+"%"; }
+function ta(id,val,attrs){ return '<textarea id="'+id+'" '+attrs+'>'+esc(val)+'</textarea>'; }
+function fieldHtml(f,id,val,attrs){
+  var h='<div class="field" id="f_'+id+'"><label class="q" for="'+id+'">'+esc(f.q)+'</label>';
+  if(f.type==="date") h+='<input type="date" id="'+id+'" '+attrs+' value="'+esc(val)+'">';
+  else if(f.type==="select") h+='<select id="'+id+'" '+attrs+'><option value="">Choose one</option>'+f.options.map(function(o){ return '<option'+(val===o?' selected':'')+'>'+esc(o)+'</option>'; }).join("")+'</select>';
+  else if(f.short) h+='<input type="text" id="'+id+'" '+attrs+' value="'+esc(val)+'">';
+  else h+=ta(id,val,attrs);
+  return h+'<div class="err">'+(f.type==="date"?"Choose a date.":f.type==="select"?"Choose one.":"Answer this before you move on.")+'</div></div>';
+}
+
+function render(){
+  var main=document.getElementById("main"), act=document.getElementById("actions"); window.scrollTo(0,0);
+  var name=STEPS[step];
+  if(name==="start") return renderStart(main,act);
+  if(name==="review") return renderReview(main,act);
+  var idx=SECTIONS.indexOf(name)+1;
+  setHeader(idx+" of "+SECTIONS.length, TITLES[name], Math.round(idx/(SECTIONS.length+1)*100));
+  var h="";
+  if(name==="back") BACK.qs.forEach(function(q,i){ h+=fieldHtml({q:q},"bk"+i,state.back[i],'data-back="'+i+'"'); });
+  if(name==="more"||name==="less") h+=renderGroup(name);
+  if(name==="ess") h+=renderEss();
+  if(name==="acc") h+=renderAcc();
+  main.innerHTML=h;
+  var next = STEPS[step+1]==="review" ? "Review and send" : "Next: "+TITLES[STEPS[step+1]];
+  act.innerHTML='<button class="btn" id="next">'+esc(next)+'</button><button class="btn link" id="back">Back</button>';
+  bind();
+  document.getElementById("next").onclick=function(){ if(validate(name)){ step++; save(); render(); } };
+  document.getElementById("back").onclick=function(){ step--; save(); render(); };
+}
+
+function renderGroup(name){
+  var cfg=name==="more"?MORE:LESS, list=state[name];
+  var h="<p>"+esc(cfg.intro)+"</p>";
+  list.forEach(function(o,i){
+    h+='<div class="beh" data-gi="'+i+'"><div class="cathead"><span>Behavior '+(i+1)+'</span>'+(list.length>1?'<button class="rm" data-rm="'+name+'|'+i+'">Remove</button>':'')+'</div>';
+    cfg.fields.forEach(function(f){ h+=fieldHtml(f,name+i+f.k,o[f.k],'data-g="'+name+'" data-i="'+i+'" data-k="'+f.k+'"'); });
+    h+='</div>';
+  });
+  if(list.length<cfg.max) h+='<button class="btn ghost" id="add" data-add="'+name+'" style="margin-top:16px">Add another behavior</button>';
+  return h;
+}
+function renderEss(){
+  var all=behaviors();
+  var h="<p>"+esc(ESS.intro)+"</p>";
+  all.forEach(function(b){ var on=state.ess.indexOf(b.id)>=0;
+    h+='<label class="pick'+(on?' on':'')+'"><input type="checkbox" data-ess="'+b.id+'"'+(on?' checked':'')+'><span><span class="tag">'+esc(b.kind)+'</span>'+esc(b.text)+'</span></label>'; });
+  h+='<div class="err" id="esserr">Choose two or three.</div>';
+  return h;
+}
+function renderAcc(){
+  var h="<p>"+esc(ACC.intro)+"</p>";
+  essList().forEach(function(b,n){ var a=accFor(b.id);
+    h+='<div class="acc"><div class="kind">'+esc(b.kind)+'</div><h2>'+esc(b.text)+'</h2>';
+    ACC.fields.forEach(function(f){ if(fieldShown(f,a)) h+=fieldHtml(f,"ac_"+b.id+"_"+f.k,a[f.k],'data-acc="'+b.id+'" data-k="'+f.k+'"'); });
+    h+='</div>'; });
+  return h;
+}
+
+function bind(){
+  document.querySelectorAll("[data-back]").forEach(function(t){ t.addEventListener("input",function(){ state.back[+t.dataset.back]=t.value; clr(t); save(); }); });
+  document.querySelectorAll("[data-g]").forEach(function(t){ t.addEventListener("input",function(){ var o=state[t.dataset.g][+t.dataset.i]; o[t.dataset.k]=t.value; clr(t); save(); }); });
+  document.querySelectorAll("[data-rm]").forEach(function(b){ b.onclick=function(){ var p=b.dataset.rm.split("|"); state[p[0]].splice(+p[1],1); state.ess=[]; save(); render(); }; });
+  var add=document.getElementById("add"); if(add) add.onclick=function(){ var g=add.dataset.add; state[g].push(blank((g==="more"?MORE:LESS).fields)); save(); render(); var bs=document.querySelectorAll(".beh"); bs[bs.length-1].scrollIntoView({behavior:"smooth"}); };
+  document.querySelectorAll("[data-ess]").forEach(function(c){ c.onchange=function(){ var id=c.dataset.ess, i=state.ess.indexOf(id);
+    if(c.checked){ if(state.ess.length>=ESS.max){ c.checked=false; flash("Choose no more than three"); return; } state.ess.push(id); } else if(i>=0) state.ess.splice(i,1);
+    c.closest(".pick").classList.toggle("on",c.checked); document.getElementById("esserr").style.display="none"; save(); }; });
+  document.querySelectorAll("[data-acc]").forEach(function(el){ var ev=(el.tagName==="SELECT"||el.type==="date")?"change":"input";
+    el.addEventListener(ev,function(){ var a=accFor(el.dataset.acc); a[el.dataset.k]=el.value; clr(el); save(); if(el.tagName==="SELECT") renderKeep(); }); });
+}
+function renderKeep(){ var y=window.scrollY; render(); window.scrollTo(0,y); }
+function clr(el){ var f=el.closest(".field"); if(f) f.classList.remove("missing"); }
+function mark(id){ var f=document.getElementById("f_"+id); if(f){ f.classList.add("missing"); return f; } return null; }
+
+function validate(name){
+  var first=null;
+  if(name==="back") state.back.forEach(function(v,i){ if(!filled(v)) first=first||mark("bk"+i); });
+  if(name==="more"||name==="less"){ var cfg=name==="more"?MORE:LESS; state[name].forEach(function(o,i){ cfg.fields.forEach(function(f){ if(!filled(o[f.k])) first=first||mark(name+i+f.k); }); }); }
+  if(name==="ess"){ var n=essList().length; if(n<ESS.min||n>ESS.max){ var e=document.getElementById("esserr"); e.style.display="block"; first=e; } }
+  if(name==="acc") essList().forEach(function(b){ var a=accFor(b.id); ACC.fields.forEach(function(f){ if(fieldShown(f,a)&&!filled(a[f.k])) first=first||mark("ac_"+b.id+"_"+f.k); }); });
+  if(first){ first.scrollIntoView({behavior:"smooth",block:"center"}); return false; }
+  return true;
+}
+
+function renderStart(main,act){
+  setHeader("Individual plan",TOOL,0);
+  var h=INTRO.map(function(p){ return "<p>"+esc(p)+"</p>"; }).join("")+
+    '<div class="field" id="f_name"><label class="q" for="name">Your name</label><input type="text" id="name" autocomplete="name" value="'+esc(state.name)+'"><div class="err">Enter your name.</div></div>'+
+    '<div class="field" id="f_email"><label class="q" for="email">Your email</label><input type="text" id="email" inputmode="email" autocomplete="email" value="'+esc(state.email)+'"><div class="err">Enter a valid email address.</div></div>'+
+    '<div class="sections" style="margin-top:22px">'+SECTIONS.map(function(s,i){ var st=status(s);
+      return '<button class="srow" data-go="'+(i+1)+'"><span>'+(i+1)+'. '+esc(TITLES[s])+'</span><span class="st'+(st.complete?" done":"")+'">'+(st.complete?"Complete":esc(st.label))+'</span></button>'; }).join("")+'</div>';
+  main.innerHTML=h;
+  act.innerHTML='<button class="btn" id="begin">'+(filled(state.back[0])?"Continue":"Begin")+'</button>';
+  var n=document.getElementById("name"), e=document.getElementById("email");
+  n.addEventListener("input",function(){ state.name=n.value; clr(n); save(); });
+  e.addEventListener("input",function(){ state.email=e.value.trim(); clr(e); save(); });
+  function need(){ var ok=true; if(!filled(state.name)){ mark("name"); ok=false; } if(!validEmail(state.email)){ mark("email"); ok=false; } return ok; }
+  document.getElementById("begin").onclick=function(){ if(!need()) return; var open=SECTIONS.findIndex(function(s){ return !status(s).complete; }); step=open<0?STEPS.length-1:open+1; save(); render(); };
+  document.querySelectorAll("[data-go]").forEach(function(b){ b.onclick=function(){ if(!need()) return; step=+b.dataset.go; save(); render(); }; });
+}
+
+function answersText(){
+  var L=[];
+  L.push("Name: "+state.name.trim());
+  L.push("Date: "+new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"}));
+  L.push(""); L.push("LOOKING BACK");
+  BACK.qs.forEach(function(q,i){ L.push("Q: "+q); L.push("A: "+state.back[i].trim()); });
+  [["MORE OF",MORE,state.more],["LESS OF",LESS,state.less]].forEach(function(g){
+    L.push(""); L.push(g[0]);
+    g[2].forEach(function(o,i){ L.push(""); L.push("Behavior "+(i+1)+": "+o.b.trim()); g[1].fields.slice(1).forEach(function(f){ L.push("- "+f.q+": "+o[f.k].trim()); }); });
+  });
+  L.push(""); L.push("ESSENTIAL BEHAVIORS AND ACCOUNTABILITY");
+  essList().forEach(function(b,n){ var a=accFor(b.id);
+    L.push(""); L.push((n+1)+". "+b.text+" ("+b.kind.toLowerCase()+")");
+    ACC.fields.forEach(function(f){ if(!fieldShown(f,a)||f.k==="howOther") return;
+      var v=a[f.k]; if(f.type==="date") v=fmtDate(v); if(f.k==="how"&&v==="Other") v="Other: "+a.howOther;
+      L.push("- "+f.q+": "+String(v).trim()); });
+  });
+  return L.join("\n");
+}
+function promptText(){ return PROMPT_HEAD.join("\n")+"\n\n"+answersText(); }
+function emailBody(){
+  return "Paste everything below the line into Claude, ChatGPT or Copilot to build your plan.\n\n----------\n\n"+promptText();
+}
+
+function renderReview(main,act){
+  setHeader("Done","Review and send",100);
+  var ok=allComplete();
+  var h='<div class="sections">'+SECTIONS.map(function(s,i){ var st=status(s);
+    return '<button class="srow" data-go="'+(i+1)+'"><span>'+(i+1)+'. '+esc(TITLES[s])+'</span><span class="st'+(st.complete?" done":"")+'">'+(st.complete?"Complete":"Incomplete")+'</span></button>'; }).join("")+'</div>';
+  h+= ok ? '<p style="margin-top:18px">Send opens your mail app with an email to '+esc(state.email)+', copied to Mark. It holds your answers and your custom AI prompt. Tap send there.</p><p>To build your plan, paste the prompt into Claude, ChatGPT or Copilot. It will ask you a few questions first, then write the plan.</p><p>If your mail app doesn\'t open, use the copy buttons.</p>'
+         : '<p style="margin-top:18px">Tap any step marked incomplete to finish it. Send unlocks once every step is complete.</p>';
+  h+='<div class="toast" id="toast"></div>';
+  main.innerHTML=h;
+  act.innerHTML='<button class="btn" id="send"'+(ok?'':' disabled')+'>Send my plan inputs</button><button class="btn ghost" id="copyp"'+(ok?'':' disabled')+'>Copy AI prompt</button><button class="btn ghost" id="copya"'+(ok?'':' disabled')+'>Copy answers</button><button class="btn link" id="back">Back</button>';
+  document.querySelectorAll("[data-go]").forEach(function(b){ b.onclick=function(){ step=+b.dataset.go; save(); render(); }; });
+  document.getElementById("back").onclick=function(){ step--; save(); render(); };
+  if(!ok) return;
+  document.getElementById("send").onclick=function(){
+    var subj=TOOL+": "+state.name.trim();
+    window.location.href="mailto:"+encodeURIComponent(state.email.trim())+"?cc="+encodeURIComponent(CC)+"&subject="+encodeURIComponent(subj)+"&body="+encodeURIComponent(emailBody().replace(/\n/g,"\r\n"));
+  };
+  function copy(t,msg){ var toast=document.getElementById("toast"); function done(){ toast.textContent=msg; toast.style.display="block"; }
+    if(navigator.clipboard&&window.isSecureContext) navigator.clipboard.writeText(t).then(done,fb); else fb();
+    function fb(){ var x=document.createElement("textarea"); x.value=t; x.style.position="absolute"; x.style.left="-9999px"; document.body.appendChild(x); x.select(); try{document.execCommand("copy"); done();}catch(e){} document.body.removeChild(x); } }
+  document.getElementById("copyp").onclick=function(){ copy(promptText(),"Prompt copied. Paste it into Claude, ChatGPT or Copilot."); };
+  document.getElementById("copya").onclick=function(){ copy(answersText(),"Answers copied."); };
+}
+
+render();
+</script>
+</body>
+</html>
